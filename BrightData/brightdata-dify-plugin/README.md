@@ -1,4 +1,9 @@
 # Bright Data Web Scraping Plugin
+
+
+https://github.com/user-attachments/assets/99882d99-556b-4daf-8d2d-3603a9a5eb9a
+
+
 A web scraping API integration to enable web unlocking and data extraction capabilities on Dify.
 
 ### 1. Install in Dify
