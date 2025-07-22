@@ -1,0 +1,514 @@
+app:
+  description: 'Enter A name of a product and receive a detailed report about it with
+    recommendations '
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: Product Deep Researcher
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: idanvilenski/brightdata:0.1.0@70a92c2f3b90eeb225c3f350560d1112a6461c64126ee4eee25ac0d7572da03c
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.2.7@b8a04c0155eb3b9d43ed1199b4387e7f67ef75ad63fcec466eab31a726e2c3a0
+kind: app
+version: 0.3.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: tool
+      id: 1751377690831-source-1752492742154-target
+      selected: false
+      source: '1751377690831'
+      sourceHandle: source
+      target: '1752492742154'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: llm
+      id: 1752492742154-source-17513777275160-target
+      source: '1752492742154'
+      sourceHandle: source
+      target: '17513777275160'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: agent
+      id: 17513777275160-source-17524926707890-target
+      source: '17513777275160'
+      sourceHandle: source
+      target: '17524926707890'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: agent
+        targetType: llm
+      id: 17524926707890-source-17524950765100-target
+      source: '17524926707890'
+      sourceHandle: source
+      target: '17524950765100'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 17524950765100-source-answer-target
+      source: '17524950765100'
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables: []
+      height: 54
+      id: '1751377690831'
+      position:
+        x: -736.5258153988595
+        y: 1781.8993926998955
+      positionAbsolute:
+        x: -736.5258153988595
+        y: 1781.8993926998955
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#17524950765100.text#}}'
+        desc: ''
+        selected: false
+        title: Answer
+        type: answer
+        variables: []
+      height: 104
+      id: answer
+      position:
+        x: 134.46128624362484
+        y: 1908.6473568225579
+      positionAbsolute:
+        x: 134.46128624362484
+        y: 1908.6473568225579
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params: {}
+          mode: chat
+          name: gemini-2.0-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 2d851510-f9fe-4e45-8b55-966b9ed0fd74
+          role: system
+          text: 'Task:
+
+            extract All the URL''s from:
+
+            {{#1752492742154.text#}}
+
+
+            Output:
+
+            Your output will be the first 20 URLs
+
+
+            Output format:
+
+            URL #1
+
+            URL #2
+
+            URL #3
+
+            URL #4'
+        selected: false
+        title: LLM (1)
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 90
+      id: '17513777275160'
+      position:
+        x: -72.70171675577183
+        y: 1647.979157474155
+      positionAbsolute:
+        x: -72.70171675577183
+        y: 1647.979157474155
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        agent_parameters:
+          instruction:
+            type: constant
+            value: 'you are a research agent, your task is when inputted a list of
+              links, to use your tools to extract each one''s content
+
+              input:
+
+              search page
+
+
+              process:
+
+              1. extract all the links from the query
+
+              2. Insert the links one by one to the "Scrape As Markdown" tool - without
+              any additional text.
+
+              3. repeat the process for every URL from the query
+
+
+              Output:
+
+              summarize all the responses as a CONSICE report with links to the websites
+              you scraped'
+          maximum_iterations:
+            type: constant
+            value: 1
+          model:
+            type: constant
+            value:
+              completion_params: {}
+              mode: chat
+              model: gemini-2.5-flash
+              model_type: llm
+              provider: langgenius/gemini/google
+              type: model-selector
+          query:
+            type: constant
+            value: '{{#17513777275160.text#}}'
+          tools:
+            type: constant
+            value:
+            - enabled: true
+              extra:
+                description: Scrape a single webpage URL and get back the results
+                  in MarkDown language. This tool can unlock any webpage even if it
+                  uses bot detection or CAPTCHA.
+              parameters:
+                url:
+                  auto: 1
+                  value: null
+              provider_name: idanvilenski/brightdata/brightdata
+              provider_show_name: idanvilenski/brightdata/brightdata
+              schemas:
+              - auto_generate: null
+                default: null
+                form: llm
+                human_description:
+                  en_US: The full URL of the webpage to scrape
+                  ja_JP: The full URL of the webpage to scrape
+                  pt_BR: The full URL of the webpage to scrape
+                  zh_Hans: 要抓取的网页的完整 URL
+                label:
+                  en_US: Website URL
+                  ja_JP: Website URL
+                  pt_BR: Website URL
+                  zh_Hans: 网站 URL
+                llm_description: The complete URL of the webpage you want to scrape.
+                  Must include http:// or https://. The tool can handle any public
+                  webpage, including those with bot protection.
+                max: null
+                min: null
+                name: url
+                options: []
+                placeholder: null
+                precision: null
+                required: true
+                scope: null
+                template: null
+                type: string
+              settings: {}
+              tool_description: Scrape a single webpage URL and get back the results
+                in MarkDown language. This tool can unlock any webpage even if it
+                uses bot detection or CAPTCHA.
+              tool_label: Scrape As Markdown
+              tool_name: scrape_as_markdown
+              type: builtin
+        agent_strategy_label: FunctionCalling
+        agent_strategy_name: function_calling
+        agent_strategy_provider_name: langgenius/agent/agent
+        desc: ''
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1752491882335'
+        memory:
+          query_prompt_template: '{{#sys.query#}}
+
+
+            {{#sys.files#}}'
+          window:
+            enabled: false
+            size: 50
+        meta:
+          minimum_dify_version: null
+          version: 0.0.2
+        output_schema: null
+        plugin_unique_identifier: langgenius/agent:0.0.21@74345c311f27b01bb49d8ccd3dcf78c18773a6ca16bf6c561f999b9dae47a55e
+        selected: false
+        title: Agent (2)
+        type: agent
+        version: '2'
+      height: 198
+      id: '17524926707890'
+      position:
+        x: -524.3577269049517
+        y: 2044.3639484769735
+      positionAbsolute:
+        x: -524.3577269049517
+        y: 2044.3639484769735
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: The search query to execute
+            ja_JP: The search query to execute
+            pt_BR: The search query to execute
+            zh_Hans: 要执行的搜索查询
+          label:
+            en_US: Search Query
+            ja_JP: Search Query
+            pt_BR: Search Query
+            zh_Hans: 搜索查询
+          llm_description: The search terms or question to search for. Should be a
+            clear, specific query.
+          max: null
+          min: null
+          name: query
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: google
+          form: form
+          human_description:
+            en_US: Which search engine to use
+            ja_JP: Which search engine to use
+            pt_BR: Which search engine to use
+            zh_Hans: 使用哪个搜索引擎
+          label:
+            en_US: Search Engine
+            ja_JP: Search Engine
+            pt_BR: Search Engine
+            zh_Hans: 搜索引擎
+          llm_description: The search engine to use. Choose 'google' for most comprehensive
+            results, 'bing' for Microsoft-focused results, or 'yandex' for Russian/Eastern
+            European focused results.
+          max: null
+          min: null
+          name: search_engine
+          options:
+          - icon: ''
+            label:
+              en_US: Google
+              ja_JP: Google
+              pt_BR: Google
+              zh_Hans: Google
+            value: google
+          - icon: ''
+            label:
+              en_US: Bing
+              ja_JP: Bing
+              pt_BR: Bing
+              zh_Hans: Bing
+            value: bing
+          - icon: ''
+            label:
+              en_US: Yandex
+              ja_JP: Yandex
+              pt_BR: Yandex
+              zh_Hans: Yandex
+            value: yandex
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        params:
+          query: ''
+          search_engine: ''
+        provider_id: idanvilenski/brightdata/brightdata
+        provider_name: idanvilenski/brightdata/brightdata
+        provider_type: builtin
+        selected: false
+        title: Search Engine
+        tool_configurations:
+          search_engine:
+            type: constant
+            value: google
+        tool_description: Scrape search results from Google, Bing or Yandex. Returns
+          SERP results in markdown.
+        tool_label: Search Engine
+        tool_name: search_engine
+        tool_parameters:
+          query:
+            type: mixed
+            value: '{{#sys.query#}}'
+        type: tool
+        version: '2'
+      height: 122
+      id: '1752492742154'
+      position:
+        x: -411.3630250459271
+        y: 1702.8443910748636
+      positionAbsolute:
+        x: -411.3630250459271
+        y: 1702.8443910748636
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params: {}
+          mode: chat
+          name: gemini-2.0-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 2d851510-f9fe-4e45-8b55-966b9ed0fd74
+          role: system
+          text: "Task:\nsummarize the input from:\n{{#17524926707890.text#}}\n\nOutput:\n\
+            summarized report of the inputted data in the correct format.\n\nOutput\
+            \ format:\n1. General Summary\n2. source #1:\n - link to website\n - summary\
+            \ of the website's content\n - insights\n3. source #2:\n - link to website\n\
+            \ - summary of the website's content\n - insights\n4. source #3:\n - link\
+            \ to website\n - summary of the website's content\n - insights\n5. continue\
+            \ for all the sources...."
+        selected: false
+        title: LLM (2)
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 90
+      id: '17524950765100'
+      position:
+        x: -200.16282171988342
+        y: 1978.339676881984
+      positionAbsolute:
+        x: -200.16282171988342
+        y: 1978.339676881984
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 932.9470980493915
+      y: -1206.8564263872388
+      zoom: 0.8705505632961246
